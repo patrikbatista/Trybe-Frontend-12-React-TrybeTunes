@@ -3,8 +3,8 @@ import PropTypes, { oneOfType } from 'prop-types';
 
 class MusicCard extends Component {
   render() {
-    const { song } = this.props;
-    const { trackName, previewUrl } = song;
+    const { song, handleCheckBox, checked } = this.props;
+    const { trackName, previewUrl, trackId } = song;
     return (
       <div>
         <h4>{trackName}</h4>
@@ -14,6 +14,17 @@ class MusicCard extends Component {
           <code>audio</code>
           .
         </audio>
+        <label htmlFor="labelFavorite">
+          Favorita
+          <input
+            data-testid={ `checkbox-music-${trackId}` }
+            name={ trackId }
+            type="checkbox"
+            onChange={ handleCheckBox }
+            checked={ checked }
+          />
+        </label>
+
       </div>
 
     );
@@ -23,5 +34,7 @@ class MusicCard extends Component {
 MusicCard.propTypes = {
   song: PropTypes
     .objectOf(oneOfType([PropTypes.string, PropTypes.number])).isRequired,
+  handleCheckBox: PropTypes.func.isRequired,
+  checked: PropTypes.bool.isRequired,
 };
 export default MusicCard;
