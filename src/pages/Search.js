@@ -14,6 +14,7 @@ class Search extends React.Component {
       nameSearch: '',
       album: '',
       loading: false,
+      apiDone: false,
     };
 
     this.nameArtist = '';
@@ -31,7 +32,7 @@ class Search extends React.Component {
 
   handleChangeButton() {
     const { nameSearch } = this.state;
-    this.setState({ loading: true });
+    this.setState({ loading: true, apiDone: false });
     searchAlbumsAPI(nameSearch)
       .then((resultArtist) => {
         if (resultArtist !== null) {
@@ -40,6 +41,7 @@ class Search extends React.Component {
             nameSearch: '',
             album: resultArtist,
             loading: false,
+            apiDone: true,
           });
         }
       });
@@ -69,6 +71,7 @@ class Search extends React.Component {
   }
 
   createAlbumCard(album) {
+    const { apiDone } = this.state;
     if (album.length > 0) {
       return (
         <div>
@@ -81,22 +84,25 @@ class Search extends React.Component {
               releaseDate },
           ) => (
             <section key={ collectionId }>
+
               <Link
                 to={ `/album/${collectionId}` }
                 data-testid={ `link-to-album-${collectionId}` }
               >
                 <img src={ artworkUrl100 } alt="Capa do álbum" />
-                <h2>{ collectionName }</h2>
               </Link>
+              <h2>{ collectionName }</h2>
               <h3>{ artistName }</h3>
               <h4>{ releaseDate }</h4>
             </section>
           ))}
         </div>
       );
-    } return (
-      <h2>Nenhum álbum foi encontrado</h2>
-    );
+    } if (apiDone === true) {
+      return (
+        <h3>Nenhum álbum foi encontrado</h3>
+      );
+    }
   }
 
   render() {
