@@ -17,7 +17,6 @@ class Search extends React.Component {
       apiDone: false,
     };
 
-    this.nameArtist = '';
     this.handleChangeSearch = this.handleChangeSearch.bind(this);
     this.handleChangeButton = this.handleChangeButton.bind(this);
     this.createInput = this.createInput.bind(this);
@@ -81,7 +80,7 @@ class Search extends React.Component {
               collectionId,
               collectionName,
               artworkUrl100,
-              releaseDate },
+            },
           ) => (
             <section key={ collectionId }>
 
@@ -91,9 +90,8 @@ class Search extends React.Component {
               >
                 <img src={ artworkUrl100 } alt="Capa do álbum" />
               </Link>
-              <h2>{ collectionName }</h2>
               <h3>{ artistName }</h3>
-              <h4>{ releaseDate }</h4>
+              <h2>{ collectionName }</h2>
             </section>
           ))}
         </div>

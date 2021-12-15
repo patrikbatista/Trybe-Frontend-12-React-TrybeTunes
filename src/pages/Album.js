@@ -4,7 +4,7 @@ import Header from './components/Header';
 import Loading from './components/Loading';
 import MusicCard from './components/MusicCard';
 import getMusics from '../services/musicsAPI';
-import { addSong, removeSong } from '../services/favoriteSongsAPI';
+import { addSong, removeSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
 
 class Album extends React.Component {
   constructor(props) {
@@ -25,12 +25,16 @@ class Album extends React.Component {
     const { match } = this.props;
     const { params } = match;
     const { id } = params;
+    console.log(id);
 
     getMusics(id).then((result) => {
       const albumCover = result[0];
       const songs = result.slice(1);// fatia array a partir do indice array
-      const checked = songs.map(() => false);
-      this.setState({ songs, albumCover, checked });
+      getFavoriteSongs().then((response) => {
+        const checked = songs
+          .map(({ trackId }) => response.some((song) => song.trackId === trackId));// adiciona false para cada elemeto array
+        this.setState({ songs, albumCover, checked });
+      });
     });
   }
 
