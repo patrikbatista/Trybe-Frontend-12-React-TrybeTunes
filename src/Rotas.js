@@ -13,11 +13,27 @@ class Rotas extends React.Component {
     return (
       <Switch>
         <Route exact path="/" component={ Login } />
-        <Route path="/search" component={ Search } />
-        <Route path="/album/:id" render={ ({ match }) => <Album match={ match } /> } />
-        <Route path="/favorites" component={ Favorites } />
-        <Route exact path="/profile" component={ Profile } />
-        <Route path="/profile/edit" component={ ProfileEdit } />
+        <Route
+          path="/search"
+          render={ ({ history }) => <Search history={ history } /> }
+        />
+        <Route
+          path="/album/:id"
+          render={ ({ match, history }) => <Album match={ match } history={ history } /> }
+        />
+        <Route
+          path="/favorites"
+          render={ ({ history }) => <Favorites history={ history } /> }
+        />
+        <Route
+          exact
+          path="/profile"
+          render={ ({ history }) => <Profile history={ history } /> }
+        />
+        <Route
+          path="/profile/edit"
+          render={ ({ history }) => <ProfileEdit history={ history } /> }
+        />
         <Route component={ NotFound } />
       </Switch>
     );

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Container, Row, Col, Card } from 'react-bootstrap';
 import Header from './components/Header';
 import Loading from './components/Loading';
 import MusicCard from './components/MusicCard';
@@ -55,31 +56,56 @@ class Album extends React.Component {
 
   renderAlbum() {
     const { albumCover, songs, checked } = this.state;
-    const { artistName, collectionName } = albumCover;
+    const { artistName, collectionName, artworkUrl100 } = albumCover;
 
     return (
-      <div>
-
-        <h2 data-testid="artist-name">{artistName}</h2>
-        <h3 data-testid="album-name">{collectionName}</h3>
-        {songs
-          .map((song, index) => (<MusicCard
-            song={ song }
-            handleCheckBox={ this.handleCheckBox }
-            key={ song.trackId }
-            checked={ checked[index] }
-          />))}
-
+      <div className="mt-3 d-md-flex align-items-center justify-content-evenly">
+        <div className="d-flex align-items-center overflow-hidden">
+          <Card
+            style={ { width: '18rem' } }
+          >
+            <div
+              className="bg-image hover-overlay hover-zoom hover-shadow ripple"
+            >
+              <Card.Img
+                className="w-100"
+                variant="top"
+                src={ artworkUrl100 }
+                alt="Capa do álbum"
+              />
+            </div>
+            <Card.Body>
+              <Card.Title>{ artistName }</Card.Title>
+              <Card.Text>
+                { collectionName }
+              </Card.Text>
+            </Card.Body>
+            <Card.Body />
+          </Card>
+        </div>
+        <div
+          className="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light"
+          style={ { maxWidth: 'auto', maxHeight: '80vh' } }
+        >
+          {songs
+            .map((song, index) => (<MusicCard
+              song={ song }
+              handleCheckBox={ this.handleCheckBox }
+              key={ song.trackId }
+              checked={ checked[index] }
+            />))}
+        </div>
       </div>
     );
   }
 
   render() {
     const { loading } = this.state;
+    const { history } = this.props;
 
     return (
       <div data-testid="page-album">
-        <Header />
+        <Header history={ history } />
         {loading ? <Loading /> : this.renderAlbum()}
 
       </div>
@@ -88,8 +114,8 @@ class Album extends React.Component {
 }
 
 Album.propTypes = {
-  match: PropTypes
-    .arrayOf(PropTypes.object).isRequired,
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
+  match: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default Album;

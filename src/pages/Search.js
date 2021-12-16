@@ -1,8 +1,12 @@
+import PropTypes from 'prop-types';
 import React from 'react';
+import { Button, Form, Card, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Header from './components/Header';
 import searchAlbumsAPI from '../services/searchAlbumsAPI';
 import Loading from './components/Loading';
+
+import '../styles/search.css';
 
 const MIN_CHARACTERS_SEARCH = 2;
 
@@ -48,25 +52,29 @@ class Search extends React.Component {
 
   createInput(nameSearch) {
     return (
-      <form action="">
-        <label htmlFor="input-artist">
-          <input
-            data-testid="search-artist-input"
-            type="text"
-            name="nameSearch"
-            value={ nameSearch }
-            onChange={ this.handleChangeSearch }
-          />
-        </label>
-        <button
-          type="button"
-          data-testid="search-artist-button"
-          disabled={ nameSearch.length < MIN_CHARACTERS_SEARCH }
-          onClick={ this.handleChangeButton }
-        >
-          Pesquisar
-        </button>
-      </form>);
+      <div className="mt-3 text-center">
+        <Form className="row d-flex justify-content-center">
+          <Form.Label htmlFor="input-artist">
+            <Form.Control
+              size="sm"
+              type="text"
+              name="nameSearch"
+              value={ nameSearch }
+              onChange={ this.handleChangeSearch }
+            />
+          </Form.Label>
+          <Button
+            size="sm"
+            variant="success"
+            type="button"
+            data-testid="search-artist-button"
+            disabled={ nameSearch.length < MIN_CHARACTERS_SEARCH }
+            onClick={ this.handleChangeButton }
+          >
+            Pesquisar
+          </Button>
+        </Form>
+      </div>);
   }
 
   createAlbumCard(album) {
@@ -74,26 +82,47 @@ class Search extends React.Component {
     if (album.length > 0) {
       return (
         <div>
-          <h3>{`Resultado de álbuns de: ${this.nameArtist}`}</h3>
-          {album.map((
-            { artistName,
-              collectionId,
-              collectionName,
-              artworkUrl100,
-            },
-          ) => (
-            <section key={ collectionId }>
-
-              <Link
-                to={ `/album/${collectionId}` }
-                data-testid={ `link-to-album-${collectionId}` }
+          <h3 className="text-center">{`Resultado de álbuns de: ${this.nameArtist}`}</h3>
+          <Row xs={ 1 } md="auto" className="g-4 justify-content-center">
+            {album.map((
+              { artistName,
+                collectionId,
+                collectionName,
+                artworkUrl100,
+              },
+            ) => (
+              <Col
+                key={ collectionId }
               >
-                <img src={ artworkUrl100 } alt="Capa do álbum" />
-              </Link>
-              <h3>{ artistName }</h3>
-              <h2>{ collectionName }</h2>
-            </section>
-          ))}
+                <Card
+                  style={ { width: '18rem' } }
+                >
+                  <Link
+                    to={ `/album/${collectionId}` }
+                  >
+                    <div
+                      className="bg-image hover-overlay hover-zoom hover-shadow ripple"
+                    >
+                      <Card.Img
+                        className="w-100"
+                        variant="top"
+                        data-testid={ `link-to-album-${collectionId}` }
+                        src={ artworkUrl100 }
+                        alt="Capa do álbum"
+                      />
+                    </div>
+                  </Link>
+                  <Card.Body>
+                    <Card.Title>{ artistName }</Card.Title>
+                    <Card.Text>
+                      { collectionName }
+                    </Card.Text>
+                  </Card.Body>
+                  <Card.Body />
+                </Card>
+              </Col>
+            ))}
+          </Row>
         </div>
       );
     } if (apiDone === true) {
@@ -105,9 +134,10 @@ class Search extends React.Component {
 
   render() {
     const { nameSearch, album, loading } = this.state;
+    const { history } = this.props;
     return (
       <div data-testid="page-search">
-        <Header />
+        <Header history={ history } />
         {loading ? <Loading /> : this.createInput(nameSearch)}
 
         {this.createAlbumCard(album)}
@@ -116,5 +146,9 @@ class Search extends React.Component {
     );
   }
 }
+
+Search.propTypes = {
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
+};
 
 export default Search;
